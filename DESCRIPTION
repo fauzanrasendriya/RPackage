@@ -1,0 +1,15 @@
+Package: rlb
+Type: Package
+Title: Regresi Linier Berganda
+Version: 0.1.0
+Author: Fauzan Rasendriya [aut, cre] (<mfn.rasendriya@gmail.com>)
+Maintainer: Fauzan Rasendriya <mfn.rasendriya@gmail.com>
+Description: Paket ini menyediakan kelas S4 dan metode untuk melakukan analisis regresi linier berganda.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+    stats,
+    methods,
+    graphics
+RoxygenNote: 7.3.2

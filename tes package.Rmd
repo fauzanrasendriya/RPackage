@@ -1,0 +1,94 @@
+---
+title: "tes package"
+author: "Muhammad Fauzan Nur Rasendriya (G1401231108)"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    self_contained: true
+    code_folding: show
+    theme: flatly
+    highlight: tango
+    toc: true
+    toc_depth: 5
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections: true
+    thumbnails: false
+    lightbox: true
+    gallery: true
+    fig_caption: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+install_load <- function (package1, ...){   
+   packages <- c(package1, ...)
+   for(package in packages){
+       if(package %in% rownames(installed.packages())){
+         do.call('library', list(package))
+       }
+       else{
+          install.packages(package)
+          do.call("library", list(package))
+       }
+   } 
+}
+
+install_load("knitr","showtext","remotes")
+
+opts_knit$set(root.dir = normalizePath("./"))
+
+font_add_google("Lato", "lato")
+showtext_auto()
+```
+
+```{r}
+remotes::install_github("fauzanrasendriya/RPackage")
+```
+
+```{r}
+library(rlb)
+```
+
+```{r}
+set.seed(60)
+n <- 60
+y <- rnorm(n, mean = 25, sd = 8)
+x1 <- rnorm(n, mean = 10, sd = 3)
+x2 <- rnorm(n, mean = 5, sd = 1.5)
+x3 <- y * 0.3 + rnorm(n, mean = 2, sd = 4)
+```
+
+```{r}
+model_rlb <- RLB(y = y, x1, x2, x3)
+class(model_rlb)
+```
+
+```{r}
+summary(model_rlb)
+```
+
+```{r}
+koefisien_model <- koef.reg(model_rlb)
+print(koefisien_model)
+```
+
+```{r}
+plot(model_rlb)
+```
+
+```{r}
+residual_model <- residuals(model_rlb)
+print(head(residual_model))
+```
+
+```{r}
+data_y_dari_model <- respons(model_rlb)
+print(head(data_y_dari_model))
+```
+
+```{r}
+data_X_dari_model <- penjelas(model_rlb)
+print(head(data_X_dari_model))
+```
