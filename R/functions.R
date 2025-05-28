@@ -1,5 +1,3 @@
-# Nama file: R/functions.R
-
 #' @importFrom methods setClass setMethod new signature
 #' @importFrom stats optim lm pt residuals
 # Penjelasan: 'summary' generic akan ditemukan karena 'stats' ada di Imports (DESCRIPTION)
