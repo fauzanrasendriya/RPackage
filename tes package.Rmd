@@ -36,37 +36,14 @@ library(rlb)
 ```
 
 ```{r}
-data(mtcars)
+set.seed(123)
+n <- 100
+x1 <- rnorm(n)
+x2 <- rnorm(n)
+x3 <- rnorm(n)
+y <- 5 + 2*x1 + 0*x2 + 3*x3 + rnorm(n)
 
-y <- mtcars$mpg
-x1 <- mtcars$disp
-x2 <- mtcars$hp
-x3 <- mtcars$wt
-x4 <- mtcars$drat
-x5 <- mtcars$qsec
-```
-
-```{r}
-model_rlb <- RLB(y=y,x1,x2,x3,x4,x5)
-koef.reg(model_rlb)
-```
-
-```{r}
-plot(model_rlb)
-summary(model_rlb)
-```
-
-```{r}
-resid <- residuals(model_rlb)
-head(resid)
-```
-
-```{r}
-resp <- respons(model_rlb)
-head(resp)
-```
-
-```{r}
-penj <- penjelas(model_rlb)
-head(penj)
+model_sw <- RLB_stepwise(y, x1, x2, x3)
+summary(model_sw)
+plot(model_sw)
 ```

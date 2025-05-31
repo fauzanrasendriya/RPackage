@@ -1,3 +1,7 @@
+# ============================
+# 1. Kelas Dasar RLB
+# ============================
+#' @exportClass RLB
 setClass("RLB",
          slots = list(
            y = "numeric",
@@ -9,15 +13,16 @@ RLB <- function(y, ...){
   nrow <- length(y)
   x <- cbind(...)
 
-  if(!is.numeric(y) & !is.numeric(x)) stop("X dan y harus numerik")
+  if(!is.numeric(y) || !is.numeric(x)) stop("X dan y harus numerik")
   if(nrow(x) != nrow) stop("Jumlah amatan x dan y harus sama")
 
   fungsi <- function(params, y, x){
     y.duga <- cbind(1, x) %*% as.matrix(params)
     smsq.resid <- sum((y - y.duga)^2)
-    return(smsq.resid)}
+    return(smsq.resid)
+  }
 
-  hasil.optim <- optim(rep(1, 1 + ncol(x)), fungsi, y=y, x=cbind(...))
+  hasil.optim <- optim(rep(1, 1 + ncol(x)), fungsi, y = y, x = x)
   new("RLB", y = y, X = x, koef = hasil.optim$par)
 }
 
@@ -25,6 +30,9 @@ respons <- function(model) model@y
 penjelas <- function(model) model@X
 koef.reg <- function(model) model@koef
 
+# ============================
+# 2. Method tambahan untuk RLB
+# ============================
 setMethod("plot", signature(x = "RLB", y = "missing"),
           function(x, y, ...) {
             X_plot <- penjelas(x)
@@ -36,7 +44,8 @@ setMethod("plot", signature(x = "RLB", y = "missing"),
                    xlab = paste0("X", i),
                    ylab = "y",
                    main = paste("X", i, "vs y"))
-              abline(lm(y_plot ~ X_plot[,i]), col="red")}
+              abline(lm(y_plot ~ X_plot[,i]), col="red")
+            }
           })
 
 setMethod("residuals", signature(object = "RLB"),
@@ -91,3 +100,62 @@ setMethod("summary", signature(object = "RLB"),
             cat("Jumlah Prediktor:", p - 1, "\n")
             cat("* signifikan di alpha 5%\n")
           })
+
+# ============================
+# 3. Pewarisan: RLB_stepwise
+# ============================
+
+# Definisikan class turunan
+#' @exportClass RLB_stepwise
+setClass("RLB_stepwise", contains = "RLB")
+
+# Fungsi seleksi stepwise berdasarkan AIC
+stepwise_selection <- function(X, y) {
+  df <- as.data.frame(X)
+  df$y <- y
+
+  full_model <- lm(y ~ ., data = df)
+  null_model <- lm(y ~ 1, data = df)
+
+  step_model <- step(null_model,
+                     scope = list(lower = null_model, upper = full_model),
+                     direction = "both", trace = 0)
+
+  selected_vars <- names(coef(step_model))[-1]
+  if (length(selected_vars) == 0) {
+    return(matrix(numeric(0), ncol = 0, nrow = nrow(X)))
+  }
+
+  X_selected <- as.matrix(df[, selected_vars, drop = FALSE])
+  if (length(selected_vars) == 1 && !is.matrix(X_selected)) {
+    X_selected <- matrix(X_selected, ncol = 1)
+  }
+  colnames(X_selected) <- selected_vars
+  return(X_selected)
+}
+
+# Konstruktor untuk RLB_stepwise
+RLB_stepwise <- function(y, ...) {
+  x_full <- cbind(...)
+  nrow <- length(y)
+
+  if (!is.numeric(y) || !is.numeric(x_full)) stop("X dan y harus numerik")
+  if (nrow(x_full) != nrow) stop("Jumlah amatan x dan y harus sama")
+
+  x_selected <- stepwise_selection(x_full, y)
+
+  fungsi <- function(params, y, x){
+    y.duga <- cbind(1, x) %*% as.matrix(params)
+    smsq.resid <- sum((y - y.duga)^2)
+    return(smsq.resid)
+  }
+
+  # Perlu hati-hati dengan ncol(x_selected) jika x_selected adalah matriks kosong
+  num_params_to_optim <- 1
+  if (ncol(x_selected) > 0) {
+    num_params_to_optim <- 1 + ncol(x_selected)
+  } else if (ncol(x_selected) == 0)
+
+  hasil.optim <- optim(rep(1, num_params_to_optim), fungsi, y = y, x = x_selected)
+  new("RLB_stepwise", y = y, X = x_selected, koef = hasil.optim$par)
+}
