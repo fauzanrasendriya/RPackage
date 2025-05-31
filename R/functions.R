@@ -1,15 +1,6 @@
 # ============================
-# 0. Imports (taruh di bagian paling atas file R Anda)
-# ============================
-#' @importFrom methods setClass new setMethod signature is
-#' @importFrom stats lm step optim pt coef
-#' @importFrom graphics par plot abline
-NULL # Baris NULL ini penting agar blok @importFrom di atas diproses roxygen2
-
-# ============================
 # 1. Kelas Dasar RLB
 # ============================
-#' @exportClass RLB
 setClass("RLB",
          slots = list(
            y = "numeric",
@@ -17,7 +8,6 @@ setClass("RLB",
            koef = "numeric"
          ))
 
-#' @export
 RLB <- function(y, ...){
   nrow <- length(y)
   x <- cbind(...)
@@ -35,17 +25,13 @@ RLB <- function(y, ...){
   new("RLB", y = y, X = x, koef = hasil.optim$par)
 }
 
-#' @export
 respons <- function(model) model@y
-#' @export
 penjelas <- function(model) model@X
-#' @export
 koef.reg <- function(model) model@koef
 
 # ============================
 # 2. Method tambahan untuk RLB
 # ============================
-#' @export
 setMethod("plot", signature(x = "RLB", y = "missing"),
           function(x, y, ...) {
             X_plot <- penjelas(x)
@@ -61,14 +47,12 @@ setMethod("plot", signature(x = "RLB", y = "missing"),
             }
           })
 
-#' @export
 setMethod("residuals", signature(object = "RLB"),
           function(object){
             y_hat <- cbind(1, object@X) %*% as.matrix(object@koef)
             respons(object) - y_hat
           })
 
-#' @export
 setMethod("summary", signature(object = "RLB"),
           function(object) {
             X <- cbind(1, object@X)
@@ -121,7 +105,6 @@ setMethod("summary", signature(object = "RLB"),
 # ============================
 
 # Definisikan class turunan
-#' @exportClass RLB_stepwise
 setClass("RLB_stepwise", contains = "RLB")
 
 stepwise_selection <- function(X, y) {
