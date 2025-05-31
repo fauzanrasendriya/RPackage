@@ -1,6 +1,3 @@
-# ============================
-# 1. Kelas Dasar RLB
-# ============================
 setClass("RLB",
          slots = list(
            y = "numeric",
@@ -29,9 +26,6 @@ respons <- function(model) model@y
 penjelas <- function(model) model@X
 koef.reg <- function(model) model@koef
 
-# ============================
-# 2. Method tambahan untuk RLB
-# ============================
 setMethod("plot", signature(x = "RLB", y = "missing"),
           function(x, y, ...) {
             X_plot <- penjelas(x)
@@ -100,11 +94,6 @@ setMethod("summary", signature(object = "RLB"),
             cat("* signifikan di alpha 5%\n")
           })
 
-# ============================
-# 3. Pewarisan: RLB_stepwise
-# ============================
-
-# Definisikan class turunan
 setClass("RLB_stepwise", contains = "RLB")
 
 stepwise_selection <- function(X, y) {
@@ -118,9 +107,9 @@ stepwise_selection <- function(X, y) {
                      scope = list(lower = null_model, upper = full_model),
                      direction = "both", trace = 0)
 
-  selected_vars <- names(coef(step_model))[-1]  # hilangkan intercept
+  selected_vars <- names(coef(step_model))[-1]
   if (length(selected_vars) == 0) {
-    return(matrix(ncol = 0, nrow = nrow(X)))  # Tidak ada variabel terpilih
+    return(matrix(ncol = 0, nrow = nrow(X)))
   }
 
   X_selected <- as.matrix(df[, selected_vars, drop = FALSE])
@@ -128,8 +117,6 @@ stepwise_selection <- function(X, y) {
   return(X_selected)
 }
 
-# Konstruktor untuk RLB_stepwise
-#' @export
 RLB_stepwise <- function(y, ...) {
   x_full <- cbind(...)
   nrow <- length(y)
