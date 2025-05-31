@@ -150,7 +150,6 @@ RLB_stepwise <- function(y, ...) {
     return(smsq.resid)
   }
 
-  # Perlu hati-hati dengan ncol(x_selected) jika x_selected adalah matriks kosong
   num_params_to_optim <- 1
   if (ncol(x_selected) > 0) {
     num_params_to_optim <- 1 + ncol(x_selected)
