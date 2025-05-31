@@ -3,7 +3,7 @@ Type: Package
 Title: Regresi Linier Berganda
 Version: 0.1.0
 Author: Komstat7 [aut, cre]
-Maintainer: Komstat7
+Maintainer: Komstat7 <rasendriyafauzan@apps.ipb.ac.id>
 Description: Paket ini menyediakan kelas S4 dan metode untuk melakukan analisis regresi linier berganda.
 License: GPL-3
 Encoding: UTF-8
