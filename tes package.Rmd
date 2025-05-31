@@ -2,23 +2,7 @@
 title: "tes package"
 author: "Muhammad Fauzan Nur Rasendriya (G1401231108)"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-output:
-  html_document:
-    self_contained: true
-    code_folding: show
-    theme: flatly
-    highlight: tango
-    toc: true
-    toc_depth: 5
-    toc_float:
-      collapsed: true
-      smooth_scroll: true
-    number_sections: true
-    thumbnails: false
-    lightbox: true
-    gallery: true
-    fig_caption: true
-    df_print: paged
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -62,33 +46,25 @@ x3 <- mtcars$wt
 
 ```{r}
 model_rlb <- RLB(y = y, x1, x2, x3)
-class(model_rlb)
-```
-
-```{r}
-summary(model_rlb)
-```
-
-```{r}
-koefisien_model <- koef.reg(model_rlb)
-print(koefisien_model)
+koef.reg(model_rlb)
 ```
 
 ```{r}
 plot(model_rlb)
+summary(model_rlb)
 ```
 
 ```{r}
-residual_model <- residuals(model_rlb)
-print(head(residual_model))
+resid <- residuals(model_rlb)
+head(resid)
 ```
 
 ```{r}
-respon_model <- respons(model_rlb)
-print(head(respon_model))
+resp <- respons(model_rlb)
+head(resp)
 ```
 
 ```{r}
-penjelas_model <- penjelas(model_rlb)
-print(head(penjelas_model))
+penj <- penjelas(model_rlb)
+head(penj)
 ```
