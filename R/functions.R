@@ -135,15 +135,12 @@ stepwise_selection <- function(X, y) {
                      scope = list(lower = null_model, upper = full_model),
                      direction = "both", trace = 0)
 
-  selected_vars <- names(coef(step_model))[-1]
+  selected_vars <- names(coef(step_model))[-1]  # hilangkan intercept
   if (length(selected_vars) == 0) {
-    return(matrix(numeric(0), ncol = 0, nrow = nrow(X)))
+    return(matrix(ncol = 0, nrow = nrow(X)))  # Tidak ada variabel terpilih
   }
 
   X_selected <- as.matrix(df[, selected_vars, drop = FALSE])
-  if (length(selected_vars) == 1 && !is.matrix(X_selected)) {
-    X_selected <- matrix(X_selected, ncol = 1)
-  }
   colnames(X_selected) <- selected_vars
   return(X_selected)
 }
@@ -165,11 +162,6 @@ RLB_stepwise <- function(y, ...) {
     return(smsq.resid)
   }
 
-  num_params_to_optim <- 1
-  if (ncol(x_selected) > 0) {
-    num_params_to_optim <- 1 + ncol(x_selected)
-  } else if (ncol(x_selected) == 0)
-
-  hasil.optim <- optim(rep(1, num_params_to_optim), fungsi, y = y, x = x_selected)
+  hasil.optim <- optim(rep(1, 1 + ncol(x_selected)), fungsi, y = y, x = x_selected)
   new("RLB_stepwise", y = y, X = x_selected, koef = hasil.optim$par)
 }
