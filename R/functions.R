@@ -1,12 +1,3 @@
-#' @importFrom methods setClass setMethod new signature
-#' @importFrom stats optim lm pt residuals
-# Penjelasan: 'summary' generic akan ditemukan karena 'stats' ada di Imports (DESCRIPTION)
-#' @importFrom graphics par plot abline
-NULL
-
-#' Kelas RLB untuk Regresi Linier Berganda
-#' @description Mendefinisikan slot untuk objek RLB.
-#' @exportClass RLB
 setClass("RLB",
          slots = list(
            y = "numeric",
@@ -14,12 +5,6 @@ setClass("RLB",
            koef = "numeric"
          ))
 
-#' Konstruktor untuk Objek RLB
-#' @description Fungsi untuk membuat dan mengestimasi model RLB.
-#' @param y Variabel dependen (numerik).
-#' @param ... Variabel independen (numerik), akan di-cbind.
-#' @return Objek kelas RLB.
-#' @export
 RLB <- function(y, ...){
   nrow <- length(y)
   x <- cbind(...)
@@ -36,33 +21,10 @@ RLB <- function(y, ...){
   new("RLB", y = y, X = x, koef = hasil.optim$par)
 }
 
-#' Aksesor untuk Variabel Respons (y)
-#' @description Mengambil slot y dari objek RLB.
-#' @param model Objek kelas RLB.
-#' @return Mengembalikan slot y.
-#' @export
 respons <- function(model) model@y
-
-#' Aksesor untuk Matriks Penjelas (X)
-#' @description Mengambil slot X dari objek RLB.
-#' @param model Objek kelas RLB.
-#' @return Mengembalikan slot X.
-#' @export
 penjelas <- function(model) model@X
-
-#' Aksesor untuk Koefisien Regresi
-#' @description Mengambil slot koef dari objek RLB.
-#' @param model Objek kelas RLB.
-#' @return Mengembalikan slot koef.
-#' @export
 koef.reg <- function(model) model@koef
 
-#' Metode Plot untuk Objek RLB
-#' @description Membuat plot sebar untuk setiap variabel X terhadap y.
-#' @param x Objek kelas RLB.
-#' @param y Parameter `y` diabaikan untuk method ini.
-#' @param ... Argumen tambahan untuk plot.
-#' @export
 setMethod("plot", signature(x = "RLB", y = "missing"),
           function(x, y, ...) {
             X_plot <- penjelas(x)
@@ -77,22 +39,12 @@ setMethod("plot", signature(x = "RLB", y = "missing"),
               abline(lm(y_plot ~ X_plot[,i]), col="red")}
           })
 
-#' Metode Residuals untuk Objek RLB
-#' @description Menghitung residual dari model RLB.
-#' @param object Objek kelas RLB.
-#' @return Residual dari model.
-#' @export
 setMethod("residuals", signature(object = "RLB"),
           function(object){
             y_hat <- cbind(1, object@X) %*% as.matrix(object@koef)
             respons(object) - y_hat
           })
 
-#' Metode Summary untuk Objek RLB
-#' @description Menampilkan ringkasan statistik model RLB.
-#' @param object Objek kelas RLB.
-#' @return Mencetak summary dan tidak mengembalikan nilai eksplisit.
-#' @export
 setMethod("summary", signature(object = "RLB"),
           function(object) {
             X <- cbind(1, object@X)
