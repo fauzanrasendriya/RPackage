@@ -52,12 +52,12 @@ library(rlb)
 ```
 
 ```{r}
-set.seed(60)
-n <- 60
-y <- rnorm(n, mean = 25, sd = 8)
-x1 <- rnorm(n, mean = 10, sd = 3)
-x2 <- rnorm(n, mean = 5, sd = 1.5)
-x3 <- y * 0.3 + rnorm(n, mean = 2, sd = 4)
+data(mtcars)
+
+y <- mtcars$mpg
+x1 <- mtcars$disp
+x2 <- mtcars$hp
+x3 <- mtcars$wt
 ```
 
 ```{r}
@@ -84,11 +84,11 @@ print(head(residual_model))
 ```
 
 ```{r}
-data_y_dari_model <- respons(model_rlb)
-print(head(data_y_dari_model))
+respon_model <- respons(model_rlb)
+print(head(respon_model))
 ```
 
 ```{r}
-data_X_dari_model <- penjelas(model_rlb)
-print(head(data_X_dari_model))
+penjelas_model <- penjelas(model_rlb)
+print(head(penjelas_model))
 ```
